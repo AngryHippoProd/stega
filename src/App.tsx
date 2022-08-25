@@ -1,25 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { NewMessageInput } from './newMessageComponent';
+import { useSelector, useDispatch } from 'react-redux';
+import { MessagesState } from './messagesReducer';
+import { addMessage } from './actions'
+import { ImageViewing } from './imageViewer'
 
 function App() {
+  const messages = useSelector<MessagesState, MessagesState["messages"]>((state) => state.messages)
+  const dispatch = useDispatch()
+
+  const onAddMessage = (message:string)=>{
+    dispatch(addMessage(message))
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <NewMessageInput addMessage={onAddMessage}/>
+      <ul>
+        <ImageViewing/>
+        {
+          messages.map((message)=> {
+            return <li key={message}>{message}</li>
+          })
+        }
+      </ul>
+    </>
   );
 }
 
